@@ -25,3 +25,11 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+
+# local_settings
+local_settings.py
+
+# system file
+.DS_Store
+*.swp
