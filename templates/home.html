@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block style %}
+<style>
+* {font-size:14px;}
+body {background: url("/static/img/bg.png");}
+.home {text-align:center;}
+.logo {text-align:center; margin: 70px 0 60px;}
+.main_form {margin:0 0 50px;}
+.main_form input {font-weight:bold; margin-left:12px; padding:6px;}
+.main_form .main_input {width: 96%;margin:0 0 20px; color:gray;}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="span6 offset3 home">
+        <div>
+            <h1 class="logo">iRead.Kindle</h1>
+        </div>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}
+            <a class="close" data-dismiss="alert">×</a>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <form method="POST" action="." class="main_form">{% csrf_token %}
+            <input type="text" name="url" placeholder="http://" class="main_input" value="" />
+            <div class="row">
+                <input type="submit" value="Send to Kindle">
+                <a href="/about/"><input type="button" value="Read Me"></a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block style %}
+<style>
+* {font-size:14px;}
+body {background: url("/static/img/bg.png");}
+.logo {float:left; margin: 40px 0 40px;}
+.header-action {float:right; margin: 40px 0 0;}
+
+#login {
+    background: none repeat scroll 0 0 rgba(166, 156, 141, 0.12);
+    border-bottom: 1px solid #FFFFFF;
+    border-radius: 2px 2px 2px 2px;
+    box-shadow: 0 1px 1px rgba(166, 156, 141, 0.3) inset;
+    padding: 25px 30px;
+}
+
+#login h2 {
+    color: rgba(0, 0, 0, 0.5);
+    font-weight: 200;
+    text-align: center;
+    text-shadow: 0 1px 0 #FFFFFF;
+}
+
+#login label {
+    color: rgba(0, 0, 0, 0.6);
+    display: block;
+    float: none;
+    text-align: left;
+    text-shadow: 0 1px 0 #FFFFFF;
+}
+
+#login .input input {
+    border-radius: 2px 2px 2px 2px;
+    box-shadow: 0 1px 0 #FFFFFF;
+    color: #444444;
+    font-size: 15px;
+    margin: 0;
+    padding: 9px 12px;
+    width: 93%;
+}
+
+#login .btn {
+    float: right;
+    font-weight: bold;
+    margin: 0;
+    padding: 8px 20px;
+}
+
+.forgot-password {color: rgba(0, 0, 0, 0.6);margin-top: 12px;}
+
+#social_login {text-align:center;}
+
+
+.login_twitter { float:right; }
+
+form .clearfix { margin-bottom: 14px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="span6 offset3">
+        <div class="clearfix">
+            <h1 class="logo">iRead.Kindle</h1>
+            <a class="btn header-action" href="#signup" data-toggle="modal">Sign Up</a>
+        </div>
+
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                <a class="close" data-dismiss="alert">×</a>
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+        <div id="login">
+            
+            <form method="POST" action=".">{% csrf_token %}
+                <h2>Sign In</h2>
+                <div class="clearfix">
+                    <label for="username">Username or Kindle E-mail</label>
+                    <div class="input"><input type="text" maxlength="30" name="username" id="id_username"></div>
+                </div>
+                <div class="clearfix">
+                    <label for="username">Password</label>
+                    <div class="input"><input type="password" maxlength="30" name="password" id="id_password"></div>
+                </div>
+                <div class="clearfix">
+                    <input type="submit" class="btn" value="Sign In">
+                    <a style="float:left;" class="forgot-password" href="#password_reset" data-toggle="modal">Forgot your password?</a>  
+                </div>
+            </form>
+
+            <hr>
+
+            <div id="social_login" class="row">
+                <div class="span2 offset1">
+                    <a href="/accounts/login_with_douban/"><img src="/static/img/doubanicon-24-full.png"></a>
+                </div>
+                <div class="span2 login_weibo">
+                    <a href="/accounts/login_with_weibo/"><img src="/static/img/sign-in-with-weibo.png"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal hide fade" id="password_reset" style="display: none;">
+          <form method="post" action="{% url accounts_password_reset %}">{% csrf_token %}
+            <div class="modal-header">
+              <a data-dismiss="modal" class="close">×</a>
+              <h3>Forgot you password?</h3>
+            </div>
+            <div class="modal-body">
+                <label>Your Kindle E-mail</label>
+                <input type="text" name="email">
+                <p class="help-block">Your Kindle will receive a document with a Password Reset URL. You can then follow the URL to make you password reset.</p>
+            </div>
+            <div class="modal-footer">
+              <a data-dismiss="modal" class="btn" href="#">Close</a>
+              <input type="submit" class="btn btn-primary" value="Send Password Reset URL to Kindle">
+            </div>
+          </form>
+        </div>
+
+        <div class="modal hide fade" id="signup" style="display: none;">
+          <form method="post" action="{% url accounts_signup %}">{% csrf_token %}
+            <div class="modal-header">
+              <a data-dismiss="modal" class="close">×</a>
+              <h3>Sign Up</h3>
+            </div>
+            <div class="modal-body">
+                <label>Username</label>
+                <input type="text" name="username">
+                <label>Kindle E-mail</label>
+                <input type="text" name="email">
+                <label>Password</label>
+                <input type="password" name="password">
+            </div>
+            <div class="modal-footer">
+              <a data-dismiss="modal" class="btn" href="#">Close</a>
+              <input type="submit" class="btn btn-primary" value="Create Account">
+            </div>
+          </form>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
