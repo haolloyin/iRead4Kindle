@@ -8,10 +8,15 @@ urlpatterns = patterns('iRead4Kindle.accounts.views',
     url(r'^logout/$', 'site_logout', name='accounts_logout'),
     url(r'^profile/$', 'profile', name='accounts_profile'),
 
-    url(r'^login_with_douban/$', 'login_with_douban', name="login_with_douban"),
+    # login or oauth with douban
+
+    url(r'^login_with_douban/$', 'douban_oauth', {'oauth_type': 'login'}, name="login_with_douban"),
+    url(r'^oauth_with_douban/$', 'douban_oauth', {'oauth_type': 'oauth'}, name='oauth_with_douban'),
     url(r'^douban_callback/$', 'douban_callback', name="douban_callback"),
 
-    url(r'^login_with_weibo/$', 'login_with_weibo', name="login_with_weibo"),
+    # login or oauth with weibo
+    url(r'^login_with_weibo/$', 'weibo_oauth', {'oauth_type': 'login'}, name="login_with_weibo"),
+    url(r'^oauth_with_weibo/$', 'weibo_oauth', {'oauth_type': 'oauth'}, name='oauth_with_weibo'),
     url(r'^weibo_callback/$', 'weibo_callback', name="weibo_callback"),
-)
 
+)

@@ -44,7 +44,7 @@ def create_or_update_user(user_id, user_type, first_name='', last_name=''):
     user_type_name = user_type + '_id'
     if getattr(profile, user_type_name) != user_id:
         setattr(profile, user_type_name, user_id)
-        tokens = first_name + '_' + last_name
+        tokens = first_name + '@' + last_name
         setattr(profile, user_type + '_tokens', tokens)
         profile.save()
     # user_logged_in.send(sender=user.__class__, user=user)
