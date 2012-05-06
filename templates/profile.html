@@ -37,7 +37,7 @@ body {background: url("/static/img/bg.png");}
             <div class="tab-pane active" id="profile">
                 <form method="post" action="{% url accounts_profile %}" class="form-horizontal">{% csrf_token %}
                     <label for="kindle_frofile_url">Your Kindle Profile URL</label>
-                    <input type="text" id="kindle_frofile_url" name="kindle_frofile_url" class="span3" placeholder="https://kindle.amazon.com/profile/name/uid" value="{{ kindle_frofile_url }}">
+                    <input type="text" id="kindle_frofile_url" name="kindle_frofile_url" class="span3" placeholder="https://kindle.amazon.com/profile/name/uid" value="{{ kindle_profile_url }}">
                     <p class="help-block">登录<a href="https://kindle.amazon.com/">https://kindle.amazon.com/</a>，右上角下拉框点击Your profile，将网址复制到上面的框中<span>(该页面是公开的:-)</span>，用于抓取你的Kindle Highlights</p>
 
                     <p></p>
@@ -45,11 +45,11 @@ body {background: url("/static/img/bg.png");}
                     
                     <label class="checkbox">
                     {% if has_weibo_oauth %}
-                    <input type="checkbox" name="share_to_weibo" {% if share_to_weibo %} checked="checked">{% endif %}
+                    <input type="checkbox" name="share_to_weibo" {% if share_to_weibo %} checked="checked"{% endif %}>
                     {% endif %}
-                    <p class="help-block"> iRead.Kindle每抓取到新的Highlight将发布一条微博
+                    <p class="help-block"> 每抓取到新的Highlight将发布一条微博
                     {% if not has_weibo_oauth %}
-                        <a href="{% url login_with_weibo %}"> »微博授权</a>
+                        <a href="{% url oauth_with_weibo %}"> » 微博授权启用该功能</a>
                         {% endif %}</p>
                     </input>
                     </label>
@@ -60,9 +60,9 @@ body {background: url("/static/img/bg.png");}
                     {% if has_douban_oauth %}
                     <input type="checkbox" name="share_to_douban" {% if share_to_douban %} checked="checked"{% endif %}>
                     {% endif %}
-                    <p class="help-block"> iRead.Kindle每抓取到新的Highlight将发布一条豆瓣广播
+                    <p class="help-block"> 每抓取到新的Highlight将发布一条豆瓣广播
                     {% if not has_douban_oauth %}
-                    <a href="{% url login_with_douban %}"> »豆瓣授权</a>
+                    <a href="{% url oauth_with_douban %}"> » 豆瓣授权启用该功能</a>
                     {% endif %}</p>
                     </input>
                     </label>
