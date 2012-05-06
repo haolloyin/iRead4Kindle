@@ -1,4 +1,4 @@
-# Django settings for iread project.
+# Django settings for iRead4Kindle project.
 
 import os.path
 
@@ -68,7 +68,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'iread.urls'
+ROOT_URLCONF = 'iRead4Kindle.urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -99,7 +99,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
     
-    'iread.accounts',
+    'iRead4Kindle.accounts',
 )
 
 from local_settings import *

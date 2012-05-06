@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.contrib.auth.models import User
 from django.conf import settings
 
-from iread.accounts.models import UserProfile, UUID
+from iRead4Kindle.accounts.models import UserProfile, UUID
 
 
 def get_user_from_uuid(uuid):

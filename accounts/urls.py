@@ -1,7 +1,7 @@
 
 from django.conf.urls.defaults import *
 
-urlpatterns = patterns('iread.accounts.views',
+urlpatterns = patterns('iRead4Kindle.accounts.views',
     url(r'^login/$', 'site_login', name='accounts_login'),
     url(r'^signup/$', 'signup', name='accounts_signup'),
     url(r'^password_reset/$', 'password_reset', name='accounts_password_reset'),

@@ -2,9 +2,9 @@
 
 from cgi import parse_qs
 
-from iread.accounts import pydouban, weibo
-from iread.accounts.utils import create_or_update_user, get_user_from_uuid
-from iread.accounts.models import UUID, UserProfile
+from iRead4Kindle.accounts import pydouban, weibo
+from iRead4Kindle.accounts.utils import create_or_update_user, get_user_from_uuid
+from iRead4Kindle.accounts.models import UUID, UserProfile
 
 from django.conf import settings
 from django.contrib import messages

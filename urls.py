@@ -8,7 +8,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Example:
-    # (r'^iread/', include('iread.foo.urls')),
+    # (r'^iRead4Kindle/', include('iRead4Kindle.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
@@ -16,11 +16,11 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     (r'^admin/', include(admin.site.urls)),
 
-    url(r'^$', 'iread.views.home', name='home'),
-    url(r'^accounts/', include('iread.accounts.urls')),
+    url(r'^$', 'iRead4Kindle.views.home', name='home'),
+    url(r'^accounts/', include('iRead4Kindle.accounts.urls')),
 
-    url(r'^login/$', 'iread.accounts.views.site_login', name='site_login'),
-    url(r'^logout/$', 'iread.accounts.views.site_logout', name='site_logout'),
+    url(r'^login/$', 'iRead4Kindle.accounts.views.site_login', name='site_login'),
+    url(r'^logout/$', 'iRead4Kindle.accounts.views.site_logout', name='site_logout'),
 
 
 )
