@@ -161,6 +161,7 @@ def weibo_callback(request):
     assert profile.weibo_tokens != None and profile.weibo_tokens != ''
     assert profile.weibo_user_id != None and profile.weibo_user_id != ''
 
+    messages.success(request, '微博授权成功，可开启自动发布微博')
     next_url = request.session.get('next_url', '')
     if not next_url:
         next_url = reverse('accounts_profile')
@@ -218,6 +219,7 @@ def douban_callback(request):
     assert profile.douban_tokens != None and profile.douban_tokens != ''
     assert profile.douban_id != None and profile.douban_id != ''
 
+    messages.success(request, '豆瓣授权成功，可开启自动发布豆瓣广播')
     if 'douban_request_secret' in request.session:
         del request.session['douban_request_secret']
     next_url = request.session.get('next_url', '')
