@@ -52,14 +52,13 @@ def create_or_update_user(user_id, user_type, first_name='', last_name=''):
     return user
 
 
-def _get_weibo_api(weibo_id='', access_token=None):
+def _get_weibo_api(weibo_id='', access_token=None, expires_in=None):
     from weibo import APIClient
     if weibo_id != '' and access_token:
         api = APIClient(app_key=settings.WEIBO_API_KEY, \
                 app_secret=settings.WEIBO_SECRET)
-        # FIXME
-        api.set_access_token(access_token, expires_in='')
-        return Api
+        api.set_access_token(access_token, expires_in=expires_in)
+        return api
     return None
 
 

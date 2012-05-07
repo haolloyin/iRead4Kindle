@@ -55,8 +55,9 @@ class UserProfile(models.Model):
         return not self.weibo_tokens or \
                 time.time() > float(self.weibo_access_token()['expires_in'])
 
-    def share_2_weibo(self):
-        pass
+    def get_kindle_name(self):
+        if self.kindle_profile_url != '':
+            return self.kindle_profile_url.split('/')[0]
 
 def create_user_profile(sender, instance, created, **kwargs):
     if created:

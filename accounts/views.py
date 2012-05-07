@@ -1,12 +1,6 @@
 # coding=utf8
 
 from cgi import parse_qs
-from time import time
-
-from iRead4Kindle.accounts import pydouban, weibo
-from iRead4Kindle.accounts.utils import create_or_update_user, get_user_from_uuid
-from iRead4Kindle.accounts.models import UUID, UserProfile
-from iRead4Kindle.accounts.decorators import login_required
 
 from django.conf import settings
 from django.contrib import messages
@@ -17,13 +11,19 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 
+from iRead4Kindle.accounts import pydouban, weibo
+from iRead4Kindle.accounts.utils import create_or_update_user, get_user_from_uuid
+from iRead4Kindle.accounts.models import UUID
+from iRead4Kindle.accounts.decorators import login_required
+
+
 @login_required
 def profile(request):
     if request.method == 'POST':
         user = request.user
         profile = user.get_profile()
 
-        profile_url = request.POST['kindle_frofile_url'][34:].split('/')
+        profile_url = request.POST['kindle_profile_url'][34:].split('/')
         if len(profile_url) == 2:
             first_name = profile_url[0]
             last_name = profile_url[1]
