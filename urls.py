@@ -21,6 +21,8 @@ urlpatterns = patterns('',
 
     url(r'^login/$', 'iRead4Kindle.accounts.views.site_login', name='site_login'),
     url(r'^logout/$', 'iRead4Kindle.accounts.views.site_logout', name='site_logout'),
+    
+    url(r'highlights/', include('iRead4Kindle.highlights.urls')),
 
 
 )

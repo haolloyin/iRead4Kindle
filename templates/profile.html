@@ -8,7 +8,7 @@ body {background: url("/static/img/bg.png");}
 .logo span {float:right; color:#E47911;}
 .tab-content {margin:0px 6px 0;}
 .tab-content label {margin:8px 0 4px; font-weight:bold;}
-.tab-content #kindle_frofile_url {width:96%; }
+.tab-content #kindle_profile_url {width:96%; }
 .help-block span {color:#E47911;}
 .form-actions {padding-left:20px !important;}
 </style>
@@ -36,8 +36,8 @@ body {background: url("/static/img/bg.png");}
         <div class="tab-content">
             <div class="tab-pane active" id="profile">
                 <form method="post" action="{% url accounts_profile %}" class="form-horizontal">{% csrf_token %}
-                    <label for="kindle_frofile_url">Your Kindle Profile URL</label>
-                    <input type="text" id="kindle_frofile_url" name="kindle_frofile_url" class="span3" placeholder="https://kindle.amazon.com/profile/name/uid" value="{{ kindle_profile_url }}">
+                    <label for="kindle_profile_url">Your Kindle Profile URL</label>
+                    <input type="text" id="kindle_profile_url" name="kindle_profile_url" class="span3" placeholder="https://kindle.amazon.com/profile/name/uid" value="{{ kindle_profile_url }}">
                     <p class="help-block">登录<a href="https://kindle.amazon.com/">https://kindle.amazon.com/</a>，右上角下拉框点击Your profile，将网址复制到上面的框中<span>(该页面是公开的:-)</span>，用于抓取你的Kindle Highlights</p>
 
                     <p></p>
@@ -76,7 +76,7 @@ body {background: url("/static/img/bg.png");}
 
             {% comment %}
 
-            ,n<div class="tab-pane" id="hackernews">
+            <div class="tab-pane" id="hackernews">
                 <p>Kindle.io can send <a href="http://news.ycombinator.com/">Hacker News</a> articles to your kindle.
                     There are two type of service: Live and Weekly. You can use both of them.
                 </p>
@@ -103,9 +103,10 @@ body {background: url("/static/img/bg.png");}
                     </div>
                 </form>
             </div>
+            {% endcomment %}
 
             <div class="tab-pane" id="notes">
-                <form method="post" action="{% url notes_config %}" class="form-horizontal">{% csrf_token %}
+                <form method="post" action="{% url check_highlight_updates %}" class="form-horizontal">{% csrf_token %}
                     <label for="twitter_id">Your Twitter ID</label>
                     <input type="text" id="twitter_id" name="twitter_id" value="{% if request.user.get_profile.twitter_id %}{{ request.user.get_profile.twitter_id }}{% endif %}">
                     <p class="help-block">
@@ -120,12 +121,11 @@ body {background: url("/static/img/bg.png");}
                         </ol>
                     </p>
                     <div class="form-actions">
-                        <input type="submit" class="btn btn-primary" value="Save changes">
+                        <input type="submit" class="btn btn-primary" value="Check Highlights Updates">
                         <a href="" class="btn">Cancel</a>
                     </div>
                 </form>
             </div>
-            {% endcomment %}
 
         </div>
     </div>

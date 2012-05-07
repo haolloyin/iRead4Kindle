@@ -86,6 +86,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     #'django.core.context_processors.tz',
     'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages',
+
+    'iRead4Kindle.pagination.paginate',
 )
 
 INSTALLED_APPS = (
@@ -100,6 +102,8 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     
     'iRead4Kindle.accounts',
+    'iRead4Kindle.highlights',
+    'iRead4Kindle.pagination',
 )
 
 from local_settings import *

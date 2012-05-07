@@ -4,7 +4,7 @@
 
 {% block style %}
 <style>
-.note .text {
+.highlight .text {
     font-size:15px; 
     line-height:24px;
     font-family: Verdana, Verdana, Geneva, sans-serif;
@@ -16,36 +16,36 @@
 
 {% block content %}
   {% load pagination_tags %}
-  {% autopaginate notes 10 %}
+  {% autopaginate highlights 10 %}
 
 <div class="row">
     <div class="span8 offset2 home">
-        <h1 class="logo">Kindle Notes<span class="tip pull-right">Hello, {{ request.user.first_name }}</span></h1>
+        <h1 class="logo">Kindle Highlights<span class="tip pull-right">Hello, {{ kindle_name }}</span></h1>
 
-        {% if not notes %}
-        <div class="note">
+        {% if not highlights %}
+        <div class="highlight">
         <p class="text">Kindle.io can record all your Highlight from your Kindle. 
             Read more and set up on the Notes Tab of <a href="/accounts/profile/">the profile page</a>,
-            then your Highlights will show up <a href="/notes/">here</a>.</p>
+            then your Highlights will show up <a href="/highlights/">here</a>.</p>
         </div>
         {% endif %}
 
-        {% if request.META.QUERY_STRING and notes %}
+        {% if request.META.QUERY_STRING and highlights %}
         <div class="book-nav">
-            <h4>Notes from Book &quot;<span class="book">{{ notes.0.book }}</span>&quot;.
-            View <a href="{% url notes_index %}">all notes</a></h4>
+            <h4>highlights from Book &quot;<span class="book">{{ highlights.0.book }}</span>&quot;.
+            View <a href="{% url h_index %}">all highlights</a></h4>
         </div>
         {% endif %}
 
         <div class="row">
-        {% for note in notes %}
-            <div class="note">
-              <span class="text">{{ note.text }}</span>
+        {% for highlight in highlights %}
+            <div class="highlight">
+              <span class="text">{{ highlight.text }}</span>
               <br>
               <br>
-              <span class="added pull-right">{{  note.added|date:"N j, Y" }}</span>
-              {% if note.book %}
-              <span class="book">From <a href="{% url notes_index %}?book={{ note.book }}">{{ note.book }}</a></span>
+              <span class="added pull-right">{{  highlight.added|date:"N j, Y" }}</span>
+              {% if highlight.book %}
+              <span class="book">From <a href="{% url highlights_index %}?book={{ highlight.book }}">{{ highlight.book }}</a></span>
               {% endif %}
               <hr>
             </div>
