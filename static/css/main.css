@@ -1,4 +1,4 @@
-body {background: url("/media/img/bg.png");}
+body {background: url("/static/img/bg.png");}
 .logo {text-align:center;margin:50px 0px 40px;}
 .logo .tip {font-size:14px; color:#E47911;}
 

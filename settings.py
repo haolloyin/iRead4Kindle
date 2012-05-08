@@ -101,9 +101,9 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
     
+    'iRead4Kindle.pagination',
     'iRead4Kindle.accounts',
     'iRead4Kindle.highlights',
-    'iRead4Kindle.pagination',
 )
 
 from local_settings import *
