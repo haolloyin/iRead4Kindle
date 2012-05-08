@@ -11,12 +11,16 @@
 }
 .book-nav {margin:0 0 20px; text-align:right;}
 .book-nav .book {color:#E47911; }
+.origin_url {float: center; color: yellow}
 </style>
 {% endblock %}
 
 {% block content %}
+
+  {% if highlights|length > 1 %}
   {% load pagination_tags %}
-  {% autopaginate highlights 10 %}
+  {% autopaginate highlights 11 %}
+  {% endif %}
 
 <div class="row">
     <div class="span8 offset2 home">
@@ -24,18 +28,24 @@
 
         {% if not highlights %}
         <div class="highlight">
-        <p class="text">Kindle.io can record all your Highlight from your Kindle. 
+        <p class="text">iRead4Kindle can record all your Highlight from your Kindle. 
             Read more and set up on the Notes Tab of <a href="/accounts/profile/">the profile page</a>,
             then your Highlights will show up <a href="/highlights/">here</a>.</p>
         </div>
         {% endif %}
 
+        {% comment %}
         {% if request.META.QUERY_STRING and highlights %}
+        {% endcomment %}
+        {% if highlights|length == 1 %}
         <div class="book-nav">
             <h4>highlights from Book &quot;<span class="book">{{ highlights.0.book }}</span>&quot;.
-            View <a href="{% url h_index %}">all highlights</a></h4>
+            View <a href="{% url highlights_index %}">all highlights</a></h4>
         </div>
         {% endif %}
+        {% comment %}
+        {% endif %}
+        {% endcomment %}
 
         <div class="row">
         {% for highlight in highlights %}
@@ -43,15 +53,25 @@
               <span class="text">{{ highlight.text }}</span>
               <br>
               <br>
+
+              <span class="origin_url"><a href="{{ highlight.get_url }}">View at kindle.amazon.com</a></span>
+
               <span class="added pull-right">{{  highlight.added|date:"N j, Y" }}</span>
+
+              {% comment %}
               {% if highlight.book %}
               <span class="book">From <a href="{% url highlights_index %}?book={{ highlight.book }}">{{ highlight.book }}</a></span>
               {% endif %}
+              {% endcomment %}
+
               <hr>
             </div>
         {% endfor %}
         </div>
+
+  {% if highlights|length > 1 %}
         {% paginate %}
+  {% endif %}
     </div>
 </div>
 {% endblock %}
