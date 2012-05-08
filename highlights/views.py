@@ -33,7 +33,7 @@ def check_highlight_updates(request):
         hl_urls, new_hls = fetch_new_highlights(request, \
                 profile_url=up.kindle_profile_url)
         # save new highlights
-        user = User.objects.get(pk=up.user)
+        user = User.objects.get(pk=up.user.id)
         for i in range(len(hl_urls)):
             highlight = Highlight(user=user, url=hl_urls[i], \
                     text=new_hls[i].string)
@@ -81,4 +81,4 @@ def fetch_new_highlights(request, profile_url='', timeout=20):
         new_urls.append(hl_url)
     new_highlights = [share.find_next('span', {'class': 'sampleCloseQuote'}) \
             for share in new_posts]
-    return (new_urls, new_highlights)
+    return (new_urls[::-1], new_highlights[::-1])
