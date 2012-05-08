@@ -24,6 +24,18 @@ def index(request):
             context_instance=RequestContext(request))
 
 
+def highlight_detail(request, post_id):
+    post_id = '/post/%s' % post_id
+    hl = Highlight.objects.filter(url=post_id)
+    if not hl:
+        return HttpResponseRedirect(reverse('highlights_index'))
+    kindle_name = request.user.get_profile().get_kindle_name()
+    return render_to_response('highlights.html', \
+            {'highlights': hl, 'kindle_name': kindle_name}, \
+            context_instance=RequestContext(request))
+
+
+
 def check_highlight_updates(request):
     ups = UserProfile.objects.all()
     for up in ups:
@@ -44,7 +56,8 @@ def check_highlight_updates(request):
             weibo_tokens = up.get_weibo_tokens_dict()
             weibo_api = social_api._get_weibo_api(up.weibo_id, \
                     weibo_tokens['access_token'], weibo_tokens['expires_in'])
-            weibo_api
+            # new_status = u'%s' % ''
+            # weibo_api.post.statuses__update(status=new_status)
     messages.success(request, 'Highlights has ben saved')
     return HttpResponseRedirect(reverse('accounts_profile'))
 
