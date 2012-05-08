@@ -155,11 +155,11 @@ def weibo_callback(request):
     profile = user.get_profile()
     weibo_tokens = token.access_token + '@' + str(token.expires_in)
     profile.weibo_tokens = weibo_tokens
-    profile.weibo_user_id = token.uid
+    profile.weibo_id = token.uid
     profile.save()
 
     assert profile.weibo_tokens != None and profile.weibo_tokens != ''
-    assert profile.weibo_user_id != None and profile.weibo_user_id != ''
+    assert profile.weibo_id != None and profile.weibo_id != ''
 
     messages.success(request, '微博授权成功，可开启自动发布微博')
     next_url = request.session.get('next_url', '')
