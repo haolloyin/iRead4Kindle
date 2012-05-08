@@ -27,14 +27,15 @@ def profile(request):
         if len(profile_url) == 2:
             first_name = profile_url[0]
             last_name = profile_url[1]
-            if (first_name and user.first_name != first_name) \
-                    or (last_name and user.last_name != last_name):
+            p_url = first_name + '/' + last_name
+            if user.first_name != first_name \
+                    or user.last_name != last_name \
+                    or profile.kindle_profile_url != p_url:
                 messages.success(request, 'Kindle profile URL 更新成功')
                 user.first_name = first_name
                 user.last_name = last_name
                 user.save()
-                profile.kindle_profile_url = user.first_name + '/' + \
-                        user.last_name
+                profile.kindle_profile_url = p_url
         share_to_weibo = True if request.POST.get('share_to_weibo') else False
         share_to_douban = True if request.POST.get('share_to_douban') else False
         msg = '自动发布 %s 已%s'
@@ -59,7 +60,7 @@ def profile(request):
         profile = user.get_profile()
         profile_url = ''
         if profile.kindle_profile_url != '':
-            profile_url = 'https://kindle.amazon/profile/%s' % \
+            profile_url = 'https://kindle.amazon.com/profile/%s' % \
                     profile.kindle_profile_url
         info = {'kindle_profile_url': profile_url,
                 'has_weibo_oauth': profile.has_weibo_oauth(),
