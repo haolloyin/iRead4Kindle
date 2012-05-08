@@ -36,7 +36,7 @@ def check_highlight_updates(request):
         user = User.objects.get(pk=up.user.id)
         for i in range(len(hl_urls)):
             highlight = Highlight(user=user, url=hl_urls[i], \
-                    text=new_hls[i].string)
+                    text=new_hls[i].text)
             highlight.save()
 
         #TODO share to weibo and douban
@@ -61,7 +61,7 @@ def check_highlight_updates(request):
 
 def fetch_new_highlights(request, profile_url='', timeout=20):
     profile_url = 'https://kindle.amazon.com/profile/%s' % profile_url
-    page = urlopen(profile_url, timeout=timeout)
+    page = urlopen(profile_url)
     if page.getcode() != 200:
         messages.error(request, 'profile page fetch error: %s' % page.getcode())
         return HttpResponseRedirect(reverse('accounts_profile'))
@@ -79,6 +79,6 @@ def fetch_new_highlights(request, profile_url='', timeout=20):
             break
         new_posts.append(hl)
         new_urls.append(hl_url)
-    new_highlights = [share.find_next('span', {'class': 'sampleCloseQuote'}) \
+    new_highlights = [share.find_next('div', {'class': 'sampleHighlight'}) \
             for share in new_posts]
     return (new_urls[::-1], new_highlights[::-1])
