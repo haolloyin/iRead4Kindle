@@ -17,7 +17,8 @@ from iRead4Kindle.highlights.models import Highlight
 def index(request):
     highlights = Highlight.objects.filter(user=request.user)
     if not highlights:
-        return HttpResponseRedirect(reverse('highlights_index'))
+        # return HttpResponseRedirect(reverse('highlights_index'))
+        return HttpResponseRedirect(reverse('site_login'))
     kindle_name = request.user.get_profile().get_kindle_name()
     return render_to_response('highlights.html', \
             {'highlights': highlights, 'kindle_name': kindle_name}, \
@@ -35,6 +36,78 @@ def highlight_detail(request, post_id):
             context_instance=RequestContext(request))
 
 
+def highlights(request, username, start, end):
+    '''
+    highlights/reader/2585443/start/3SIV34360UH0D/end/2PHTKF6EH81O3/
+    '''
+    up = UserProfile.objects.get(kindle_profile_url__contains=username)
+    hls = Highlight.objects.filter(user=up.user)
+    start_id = hls.get(url__contains=start).pk
+    end_id = hls.get(url__contains=end).pk
+    hls = hls.filter(pk__gte=start_id).filter(pk__lte=end_id)
+    if not hls or len(hls) == 0:
+        return HttpResponseRedirect(reverse('highlights_index'))
+    kindle_name = up.get_kindle_name()
+    return render_to_response('highlights.html', \
+            {'highlights': hls, 'kindle_name': kindle_name}, \
+            context_instance=RequestContext(request))
+
+
+def update_weibo(up=None, text=''):
+    if up is None or text == '':
+        return False
+    weibo_api = social_api.get_weibo_api(up.weibo_id, \
+            token_dict=up.get_weibo_tokens_dict())
+    weibo_api.post.statuses__update(status=text)
+    return True
+
+
+def single_user_check_and_share(request):
+    user = request.user
+    up = user.get_profile()
+    msg = ''
+    if up.kindle_profile_url == '':
+        msg = 'You have not provide Your Kindle Profile URL'
+        messages.error(request, msg)
+        return HttpResponseRedirect(reverse('accounts_profile'))
+
+    # fetch new highlights
+    hl_urls, new_hls = fetch_new_highlights(request, \
+            profile_url=up.kindle_profile_url)
+
+    if len(hl_urls) == 0 or len(new_hls) == 0:
+        msg = 'You have no new Kindle highlights'
+        messages.error(request, msg)
+        return HttpResponseRedirect(reverse('accounts_profile'))
+
+    # save new highlights
+    user = User.objects.get(pk=up.user.id)
+    url_len = len(hl_urls)
+    for i in range(url_len):
+        highlight = Highlight(user=user, url=hl_urls[i], \
+                text=new_hls[i].text.strip())
+        highlight.save()
+
+    # share to weibo
+    url = ''
+    if up.has_weibo_oauth():
+        hl_text = new_hls[0].text.strip()
+        hl_text = hl_text[:65] if len(hl_text) > 65 else hl_text
+        if url_len > 1:
+            reader = up.get_kindle_uid()
+            start = hl_urls[0].split('/')[2]
+            end = hl_urls[url_len-1].split('/')[2]
+            url = 'http://%s/highlights/reader/%s/start/%s/end/%s/' % (request.META['HTTP_HOST'], reader, start, end)
+        else:
+            url = 'http://%s/highlights/detail%s' % (request.META['HTTP_HOST'], hl_urls[0].split('/')[2])
+
+        weibo_text = u'#iRead4Kindle#「%s...」%s' % (hl_text, url)
+        update_weibo(up=up, text=weibo_text)
+
+    msg = '%s highlights has ben saved/shared. %s' % (url_len, url)
+    messages.success(request, msg)
+    return HttpResponseRedirect(reverse('accounts_profile'))
+
 
 def check_highlight_updates(request):
     ups = UserProfile.objects.all()
@@ -44,21 +117,34 @@ def check_highlight_updates(request):
 
         hl_urls, new_hls = fetch_new_highlights(request, \
                 profile_url=up.kindle_profile_url)
+        if len(hl_urls) == 0 or len(new_hls) == 0:
+            continue
         # save new highlights
         user = User.objects.get(pk=up.user.id)
-        for i in range(len(hl_urls)):
+        url_len = len(hl_urls)
+        for i in range(url_len):
             highlight = Highlight(user=user, url=hl_urls[i], \
-                    text=new_hls[i].text)
+                    text=new_hls[i].text.strip())
             highlight.save()
 
-        #TODO share to weibo and douban
         if up.has_weibo_oauth():
-            weibo_tokens = up.get_weibo_tokens_dict()
-            weibo_api = social_api._get_weibo_api(up.weibo_id, \
-                    weibo_tokens['access_token'], weibo_tokens['expires_in'])
-            # new_status = u'%s' % ''
-            # weibo_api.post.statuses__update(status=new_status)
-    messages.success(request, 'Highlights has ben saved')
+            hl_text = new_hls[0].text.strip()
+            hl_text = hl_text[:65] if len(hl_text) > 65 else hl_text
+            if url_len > 1:
+                reader = up.get_kindle_uid()
+                start = hl_urls[0].split('/')[2]
+                end = hl_urls[url_len-1].split('/')[2]
+                url = 'http://%s/highlights/reader/%s/start/%s/end/%s/' % (request.META['HTTP_HOST'], reader, start, end)
+            else:
+                url = 'http://%s/highlights/detail%s' % (request.META['HTTP_HOST'], hl_urls[0].split('/')[2])
+
+            weibo_text = u'#iRead4Kindle#「%s...」%s' % (hl_text, url)
+            update_weibo(up=up, text=weibo_text)
+
+        #TODO: share to douban
+
+    msg = 'Highlights has ben saved & shared:'
+    messages.success(request, msg)
     return HttpResponseRedirect(reverse('accounts_profile'))
 
 

@@ -1,3 +1,6 @@
+# coding=utf8
+
+
 """
 This file demonstrates two different styles of tests (one doctest and one
 unittest). These will both pass when you run "manage.py test".
@@ -18,6 +21,18 @@ from iRead4Kindle.highlights import tests
 tests.check()
 '''
 
+def test_update_weibo():
+    user = User.objects.get(username='admin')
+    up = UserProfile.objects.get(user=user)
+    tokens = up.get_weibo_tokens_dict()
+    print tokens
+    api = social_api.get_weibo_api(up.weibo_id, token_dict=tokens)
+    text = u"""#iRead4Kindle#\u300c\n\n\u8d22\u5bcc\u548c\u7279\u6743\u5982\u4e3a\u5171\u540c\u6240\u6709\uff0c\u5219\u6700\u5bb9\u6613\u4fdd\u536b\u3002\u5728\u672c\u4e16\u7eaa\u4e2d\u53f6\u51fa\u73b0\u7684\u6240\u8c13\u201c\u53d6\u6d88\u79c1\u6709\u5236\u201d\uff0c\u5b9e\u9645\u4e0a\u610f\u5473\u7740\u628a\u8d22\u4ea7\u96c6\u4e2d\u5230\u6bd4\u4ee5\u524d\u66f4\u5c11\u5f97\u591a\u7684\u4e00\u6279\u4eba\u624b\u4e2d...\u300dhttp://127.0.0.1:8001/highlights/detail/4PDJX6UFZVWT/"""
+    text = '测试发送中文微博'
+    print text
+    result = api.post.statuses__update(status=text)
+    #result = api.get.statuses__user_timeline()
+    print result
 
 def test_weibo():
     for up in UserProfile.objects.all():
@@ -40,7 +55,7 @@ def test_weibo_api(up):
                 weibo_tokens['access_token'], weibo_tokens['expires_in'])
         # new_status = u'%s' % ''
         # weibo_api.post.statuses__update(status=new_status)
-        ids = weibo_api.get.statuses__user_timeline__ids()
+        ids = weibo_api.get.statuses__user_timeline()
         print 'user_timeline: '
         print ids
 
