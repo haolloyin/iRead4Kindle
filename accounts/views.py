@@ -46,13 +46,13 @@ def profile(request):
             else:
                 profile.share_to_weibo = True
                 messages.success(request, msg % ('微博', '开启'))
-        if profile.share_to_douban != share_to_douban:
-            if not share_to_douban:
-                profile.share_to_douban = False
-                messages.error(request, msg % ('豆瓣广播', '关闭'))
-            else:
-                profile.share_to_douban = True
-                messages.success(request, msg % ('豆瓣广播', '开启'))
+        # if profile.share_to_douban != share_to_douban:
+        #     if not share_to_douban:
+        #         profile.share_to_douban = False
+        #         messages.error(request, msg % ('豆瓣广播', '关闭'))
+        #     else:
+        #         profile.share_to_douban = True
+        #         messages.success(request, msg % ('豆瓣广播', '开启'))
         profile.save()
         return HttpResponseRedirect(reverse('accounts_profile'))
     else:

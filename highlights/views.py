@@ -13,6 +13,7 @@ from django.template import RequestContext
 from iRead4Kindle.accounts.models import UserProfile
 from iRead4Kindle.accounts import utils as social_api
 from iRead4Kindle.highlights.models import Highlight
+from iRead4Kindle.utils.decorators import admin_required
 
 def index(request):
     highlights = Highlight.objects.filter(user=request.user)
@@ -109,6 +110,7 @@ def single_user_check_and_share(request):
     return HttpResponseRedirect(reverse('accounts_profile'))
 
 
+@admin_required
 def check_highlight_updates(request):
     ups = UserProfile.objects.all()
     for up in ups:
@@ -146,16 +148,6 @@ def check_highlight_updates(request):
     msg = 'Highlights has ben saved & shared:'
     messages.success(request, msg)
     return HttpResponseRedirect(reverse('accounts_profile'))
-
-
-    # for up in ups:
-    #     if (not up.has_weibo_oauth()) or (not up.share_to_weibo) or \
-    #             up.kindle_profile_url == '':
-    #         continue
-    #     weibo_tokens = up.get_weibo_tokens_dict()
-    #     weibo_api = social_api._get_weibo_api(up.weibo_id, \
-    #             weibo_tokens['access_token'], weibo_tokens['expires_in'])
-        
 
 
 def fetch_new_highlights(request, profile_url='', timeout=20):
