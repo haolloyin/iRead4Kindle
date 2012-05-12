@@ -6,6 +6,9 @@ from django.contrib.auth.models import User
 from django.conf import settings
 
 from iRead4Kindle.accounts.models import UserProfile, UUID
+from iRead4Kindle.accounts.weibo import APIClient
+from iRead4Kindle.accounts.pydouban import Api
+
 
 
 def get_user_from_uuid(uuid):
@@ -61,6 +64,14 @@ def _get_weibo_api(weibo_id='', access_token=None, expires_in=None):
         return api
     return None
 
+
+def get_weibo_api(weibo_id, token_dict=None):
+    if weibo_id == '' or token_dict is None:
+        return None
+    api = APIClient(app_key=settings.WEIBO_API_KEY, \
+            app_secret=settings.WEIBO_SECRET)
+    api.set_access_token(token_dict['access_token'], token_dict['expires_in'])
+    return api
 
 
 def _get_douban_api(douban_id='', access_token=None, token_secret=None):

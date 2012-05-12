@@ -59,6 +59,10 @@ class UserProfile(models.Model):
         if self.kindle_profile_url != '':
             return self.kindle_profile_url.split('/')[0]
 
+    def get_kindle_uid(self):
+        if self.kindle_profile_url != '':
+            return self.kindle_profile_url.split('/')[1]
+
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
