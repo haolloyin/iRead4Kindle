@@ -29,8 +29,7 @@ body {background: url("/static/img/bg.png");}
 
         <ul class="nav nav-tabs">
             <li class="active"><a href="#profile" data-toggle="tab">Profile</a></li>
-            <li><a href="#hackernews" data-toggle="tab">Hacker News</a></li>
-            <li><a href="#notes" data-toggle="tab">Notes</a></li>
+            <li><a href="#highlights" data-toggle="tab">Highlights</a></li>
         </ul>
 
         <div class="tab-content">
@@ -48,12 +47,14 @@ body {background: url("/static/img/bg.png");}
                     <input type="checkbox" name="share_to_weibo" {% if share_to_weibo %} checked="checked"{% endif %}>
                     {% endif %}
                     <p class="help-block"> 每抓取到新的Highlight将发布一条微博
-                    {% if not has_weibo_oauth %}
-                        <a href="{% url oauth_with_weibo %}"> » 微博授权启用该功能</a>
-                        {% endif %}</p>
+                        {% if not has_weibo_oauth %}
+                    <a href="{% url oauth_with_weibo %}"> » 微博授权启用该功能</a>
+                        {% endif %}
+                    </p>
                     </input>
                     </label>
 
+                    {% comment %}
                     <p></p>
                     <label for="douban">自动发布豆瓣广播</label>
                     <label class="checkbox">
@@ -66,66 +67,28 @@ body {background: url("/static/img/bg.png");}
                     {% endif %}</p>
                     </input>
                     </label>
+                    {% endcomment %}
 
                     <div class="form-actions">
                         <input type="submit" class="btn btn-primary" value="Save changes">
-                        <a href="" class="btn">Cancel</a>
                     </div>
                 </form>
             </div>
-
-            {% comment %}
-
-            <div class="tab-pane" id="hackernews">
-                <p>Kindle.io can send <a href="http://news.ycombinator.com/">Hacker News</a> articles to your kindle.
-                    There are two type of service: Live and Weekly. You can use both of them.
-                </p>
-                <hr>
-
-                <form method="post" action="{% url hackernews_config %}" class="form-horizontal">{% csrf_token %}
-                    <label for="points_limit">Receive HackerNews Live</label>
-                    <select id="points_limit" name="points_limit" class="span4">
-                        {% for points, title in points_list %}
-                        <option value="{{ points }}"{% ifequal request.user.get_profile.hn_points points %} selected="selected"{% endifequal %}>{{ title }}</option>
-                        {% endfor %}
-                    </select>
-                    <p class="help-block">Articles over this points will sent to you immediately.</p>
-
-                    <hr>
-                    <label class="checkbox">
-                        <input type="checkbox" name="receive_weekly" {% if request.user.get_profile.receive_weekly %} checked="checked"{% endif %}> Receive HackerNews Weekly
-                    </label>
-                    <p class="help-block">Send once a week. Articles over 200 points.</p>
-
-                    <div class="form-actions">
-                        <input type="submit" class="btn btn-primary" value="Save changes">
-                        <a href="" class="btn">Cancel</a>
-                    </div>
-                </form>
-            </div>
-            {% endcomment %}
-
-            <div class="tab-pane" id="notes">
-                <form method="post" action="{% url check_highlight_updates %}" class="form-horizontal">{% csrf_token %}
-                    <label for="twitter_id">Your Twitter ID</label>
-                    <input type="text" id="twitter_id" name="twitter_id" value="{% if request.user.get_profile.twitter_id %}{{ request.user.get_profile.twitter_id }}{% endif %}">
+            
+            {% if has_weibo_oauth or has_douban_oauth %}
+            <div class="tab-pane" id="highlights">
+                <form method="post" action="{% url check_and_share %}" class="form-horizontal">{% csrf_token %}
+                    <label for="fetch_highlights"></label>
                     <p class="help-block">
-                        You must have your twitter id set to use Notes Service of Kindle.io<br>
-                        Here is the steps:
-                        <ol>
-                            <li>Set this Twitter account as your <a href="https://kindle.amazon.com/home/preferences">Kindle Share Social Network</a>.</li>
-                            <li>HighLight text while you are reading on Kindle, and, Share it.</li>
-                            <li>As a result, a tweet will be created, Kindle.io rely on this tweet to provide the notes service.</li>
-                            <li>The official twitter account named kindleio will follow you to trace your kindle shares. Not to block it ;)</li>
-                            <li>If you would highlight and share a lot, which may disturb your followers. Create a second twitter account.</li>
-                        </ol>
+                    Now you can fetch you new highlights and share them to your Weibo account by CLICK the below buttom "<strong>Check & Share Highlights</strong>" button.
                     </p>
                     <div class="form-actions">
-                        <input type="submit" class="btn btn-primary" value="Check Highlights Updates">
+                        <input type="submit" class="btn btn-primary" value="Check & Share Highlights">
                         <a href="" class="btn">Cancel</a>
                     </div>
                 </form>
             </div>
+            {% endif %}
 
         </div>
     </div>

@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %}About kindle.io{% endblock %}
+{% block title %}About iRead.Kindle{% endblock %}
 
 {% block style %}
 <style>
-body {background: url("/media/img/bg.png");}
+body {background: url("/static/img/bg.png");}
 .logo {text-align:center; margin: 40px 0 40px;}
 i {margin:4px;}
 .desc {padding:10px;} 
@@ -15,51 +15,29 @@ i {margin:4px;}
 {% block content %}
 <div class="row">
     <div class="span6 offset3">
-        <h1 class="logo">About Kindle.io</h1>
+        <h1 class="logo">iRead.Kindle</h1>
 
-        <h3><i class="icon-home"></i>Send to Kindle Service</h3>
+        <h3><i class="icon-book"></i>Share Your Highlights to Weibo</h3>
         <div class="desc">
-            <p>Enter an URL on <a href="/">Home</a> page, and click "Send to Kindle" button, Kindle.io when send the MAIN CONTENT of the page to your kindle.<br>
-            Want to try up? Here are some links you can try with:
-            <p>
-            <ul>
-                <li><a href="http://www.joelonsoftware.com/articles/FindingGreatDevelopers.html">An article from Joel on Software</a></li>
-                <li><a href="http://www.lixiaolai.com/archives/9615.html">Chinese articles also works well</a></li>
-                <li><a href="http://docs.python.org/whatsnew/2.7.html">You are a programmer? Try read this Python doc on Kindle</a></li>
-                <li><a href="http://sites.google.com/site/asenselessconversation/">Novel: A Senseless Conversation</a></li>
-            </ul>
-            <p>
-            You may encounter articles received with bad looking (senseless) content for some URLs. I knew it, A.I. could not work well for all the times. Email me the URL if you want in this situation.
-            </p>
-        </div>
-
-        <h3><i class="icon-screenshot"></i>Hacker News</h3>
-        <div class="desc">
-            <p>Receive articles from <a href="http://news.ycombinator.com/">Hacker News</a>.
-               They are sending daily or weekly. See profile page for details.
-            </p>
-        </div>
-
-        <h3><i class="icon-book"></i>Notes</h3>
-        <div class="desc">
-            <p>Kindle.io can record all your Kindle highlights. 
+            <p>iRead.Kindle is inspired by <a href="http://kindle.io/">kindle.io</a>, it can record all your Kindle highlights, which you share with friends using your social network accounts (like Twitter or Facebook). <br>
+            However, both Twitter & Facebook could not be visited inside the FUCKING G.F.W, so it is necesary to provide a substitution for them, Weibo.<br>
                Read more and set up on the <a href="/accounts/profile/">profile page</a>, 
-               then your Highlights will show up <a href="/notes/">here</a>.
-               <br>
+               then your Highlights will show up at <a href="/highlights/">highlights page</a>.
+               <br><br>
                Setting steps are:
             </p>
             <ol>
                 <li>Set a Twitter account as your <a href="https://kindle.amazon.com/home/preferences">Kindle Share Social Network</a>.</li>
                 <li>HighLight some text while you are reading on Kindle, and, Share it.</li>
-                <li>As a result, a tweet will be created, Kindle.io rely on this tweet to provide the notes service.</li>
-                <li>The official twitter account named kindleio will follow you to trace your kindle shares. Not to block it ;)</li>
-                <li>If you would highlight and share a lot, which may disturb your followers. Create a second twitter account.</li>
+                <li>As a result, Amazon will save these on <a href="https://kindle.amazon.com/">your kindle profile page</a>, which is PUBLIC for every Kindle reader.</li>
+                <li>Type your own kindle profile page URL on <a href="/accounts/profile/">profile page</a>. And allow iRead.Kindle to update your Weibo.</li>
+                <li>Then iRead.Kindle will fetch your Kindle Profile Page for latest highlights and share them to your Weibo account.</li>
             </ol>
         </div>
 
         <h3><i class="icon-envelope"></i>Contact</h3>
         <div class="desc">
-            <p>E-mail: info [AT] kindle.io</p>
+            <p>E-mail: iread.kindle [AT] gmail.com</p>
         </div>
     </div>
 </div>
