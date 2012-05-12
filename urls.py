@@ -17,11 +17,12 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
 
     url(r'^$', 'iRead4Kindle.views.home', name='home'),
+    url(r'^about/$', 'iRead4Kindle.views.about', name='about'),
     url(r'^accounts/', include('iRead4Kindle.accounts.urls')),
 
     url(r'^login/$', 'iRead4Kindle.accounts.views.site_login', name='site_login'),
     url(r'^logout/$', 'iRead4Kindle.accounts.views.site_logout', name='site_logout'),
-    
+
     url(r'highlights/', include('iRead4Kindle.highlights.urls')),
 
 
