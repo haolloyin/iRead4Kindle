@@ -29,7 +29,9 @@ body {background: url("/static/img/bg.png");}
 
         <ul class="nav nav-tabs">
             <li class="active"><a href="#profile" data-toggle="tab">Profile</a></li>
+            {% if has_weibo_oauth or has_douban_oauth %}
             <li><a href="#highlights" data-toggle="tab">Highlights</a></li>
+            {% endif %}
         </ul>
 
         <div class="tab-content">
