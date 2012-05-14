@@ -16,10 +16,16 @@ from django.contrib.auth.models import User
 from iRead4Kindle.accounts.models import UserProfile
 from iRead4Kindle.highlights.models import Highlight
 from iRead4Kindle.accounts import utils as social_api
-'''
-from iRead4Kindle.highlights import tests
-tests.check()
-'''
+
+
+def get_weibo_api():
+    user = User.objects.get(username='admin')
+    up = UserProfile.objects.get(user=user)
+    tokens = up.get_weibo_tokens_dict()
+    api = social_api.get_weibo_api(up.weibo_id, token_dict=tokens)
+    print 'weibo api is ok.'
+    return api
+
 
 def test_update_weibo():
     user = User.objects.get(username='admin')
