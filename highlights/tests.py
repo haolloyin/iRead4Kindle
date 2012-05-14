@@ -18,8 +18,8 @@ from iRead4Kindle.highlights.models import Highlight
 from iRead4Kindle.accounts import utils as social_api
 
 
-def get_weibo_api():
-    user = User.objects.get(username='admin')
+def get_weibo_api(username='admin'):
+    user = User.objects.get(username=username)
     up = UserProfile.objects.get(user=user)
     tokens = up.get_weibo_tokens_dict()
     api = social_api.get_weibo_api(up.weibo_id, token_dict=tokens)
