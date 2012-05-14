@@ -1,7 +1,11 @@
 # coding=utf8
 
 from urllib2 import urlopen
-from bs4 import BeautifulSoup as BS
+try:
+    from bs4 import BeautifulSoup as BS
+except:
+    # BeautifulSoup-3.2.1
+    from iRead4Kindle.utils.BeautifulSoup import BeautifulSoup as BS
 
 from django.contrib.auth.models import User
 from django.contrib import messages
