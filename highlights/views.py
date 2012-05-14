@@ -62,11 +62,14 @@ def highlights(request, username, start, end):
 
 def update_weibo(up=None, text=''):
     if up is None or text == '':
-        return False
+        return None
     weibo_api = social_api.get_weibo_api(up.weibo_id, \
             token_dict=up.get_weibo_tokens_dict())
-    weibo_api.post.statuses__update(status=text)
-    return True
+    result = weibo_api.post.statuses__update(status=text)
+    # get weibo mid for visiting the status update abobe
+    mid = weibo_api.get.statuses__querymid(id=result['id'], type=1)
+    status_url = 'http://weibo.com/%s/%s' % (result['user']['id'], mid['mid'])
+    return status_url
 
 
 def single_user_check_and_share(request):
@@ -96,8 +99,9 @@ def single_user_check_and_share(request):
         highlight.save()
 
     # share to weibo
-    url = ''
+    status_url = ''
     if up.has_weibo_oauth():
+        url = ''
         hl_text = new_hls[0].text.strip()
         hl_text = hl_text[:65] if len(hl_text) > 65 else hl_text
         if url_len > 1:
@@ -109,9 +113,9 @@ def single_user_check_and_share(request):
             url = 'http://%s/highlights/detail%s' % (request.META['HTTP_HOST'], hl_urls[0].split('/')[2])
 
         weibo_text = u'#iRead4Kindle#「%s...」%s' % (hl_text, url)
-        update_weibo(up=up, text=weibo_text)
+        status_url = update_weibo(up=up, text=weibo_text)
 
-    msg = '%s highlights has ben saved/shared. %s' % (url_len, url)
+    msg = '%s highlights has ben saved/shared.\n%s' % (url_len, status_url)
     messages.success(request, msg)
     return HttpResponseRedirect(reverse('accounts_profile'))
 
