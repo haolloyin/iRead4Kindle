@@ -1,8 +1,10 @@
 # coding=utf8
 
 from urllib2 import urlopen
+USE_BS4 = False
 try:
     from bs4 import BeautifulSoup as BS
+    USE_BS4 = True
 except:
     # BeautifulSoup-3.2.1
     from iRead4Kindle.utils.BeautifulSoup import BeautifulSoup as BS
@@ -160,12 +162,19 @@ def fetch_new_highlights(request, profile_url='', timeout=20):
     if page.getcode() != 200:
         messages.error(request, 'profile page fetch error: %s' % page.getcode())
         return HttpResponseRedirect(reverse('accounts_profile'))
-    soup = BS(page, from_encoding='utf8')
+
+    if USE_BS4:
+        soup = BS(page, from_encoding='utf8')
+    else:
+        soup = BS(page, fromEncoding='utf8')
 
     def _get_shared_tags(tag):
         return tag.has_key('href') and tag['href'].startswith('/post/')
 
-    shared_posts = soup.find_all(_get_shared_tags)
+    if USE_BS4:
+        shared_posts = soup.find_all(_get_shared_tags)
+    else:
+        shared_posts = soup.findAll(_get_shared_tags)
     new_posts = []
     new_urls = []
     for hl in shared_posts:
@@ -174,6 +183,10 @@ def fetch_new_highlights(request, profile_url='', timeout=20):
             break
         new_posts.append(hl)
         new_urls.append(hl_url)
-    new_highlights = [share.find_next('div', {'class': 'sampleHighlight'}) \
-            for share in new_posts]
+    if USE_BS4:
+        new_highlights = [share.find_next('div', {'class': 'sampleHighlight'}) \
+                for share in new_posts]
+    else:
+        new_highlights = [share.findNext('div', {'class': 'sampleHighlight'}) \
+                for share in new_posts]
     return (new_urls[::-1], new_highlights[::-1])
