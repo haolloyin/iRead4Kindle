@@ -21,7 +21,7 @@ body {background: url("/static/img/bg.png");}
 
         {% if messages %}
         {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">{{ message }}
+        <div class="alert alert-{{ message.tags }}">{{ message|safe }}
             <a class="close" data-dismiss="alert">×</a>
         </div>
         {% endfor %}

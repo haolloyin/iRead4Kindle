@@ -115,6 +115,7 @@ def single_user_check_and_share(request):
         weibo_text = u'#iRead4Kindle#「%s...」%s' % (hl_text, url)
         status_url = update_weibo(up=up, text=weibo_text)
 
+    status_url = '<a href="%s">%s</a>' % (status_url, status_url)
     msg = '%s highlights has ben saved/shared.\n%s' % (url_len, status_url)
     messages.success(request, msg)
     return HttpResponseRedirect(reverse('accounts_profile'))
