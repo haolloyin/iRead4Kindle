@@ -100,7 +100,7 @@ def single_user_check_and_share(request):
 
     # share to weibo
     status_url = ''
-    if up.has_weibo_oauth():
+    if up.has_weibo_oauth() and up.share_to_weibo:
         url = ''
         hl_text = new_hls[0].text.strip()
         hl_text = hl_text[:65] if len(hl_text) > 65 else hl_text
