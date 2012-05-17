@@ -23,19 +23,28 @@ def profile(request):
         user = request.user
         profile = user.get_profile()
 
-        profile_url = request.POST['kindle_profile_url'][34:].split('/')
-        if len(profile_url) == 2:
-            first_name = profile_url[0]
-            last_name = profile_url[1]
-            p_url = first_name + '/' + last_name
-            if user.first_name != first_name \
-                    or user.last_name != last_name \
-                    or profile.kindle_profile_url != p_url:
-                messages.success(request, 'Kindle profile URL 更新成功')
-                user.first_name = first_name
-                user.last_name = last_name
-                user.save()
-                profile.kindle_profile_url = p_url
+        kp_url = request.POST['kindle_profile_url'].strip()
+        if kp_url != '' and kp_url != None:
+            if not kp_url.startswith('https://kindle.amazon.com/profile/'):
+                messages.error(request, 'Kindle Profile URL 不正确，必须以‘https://kindle.amazon.com/profile/’开头')
+                return HttpResponseRedirect(reverse('accounts_profile'))
+
+            profile_url = kp_url[34:].split('/')
+            if len(profile_url) == 2:
+                first_name = profile_url[0]
+                last_name = profile_url[1]
+                p_url = first_name + '/' + last_name
+                if user.first_name != first_name \
+                        or user.last_name != last_name \
+                        or profile.kindle_profile_url != p_url:
+                    messages.success(request, 'Kindle profile URL 更新成功')
+                    user.first_name = first_name
+                    user.last_name = last_name
+                    user.save()
+                    profile.kindle_profile_url = p_url
+        else:
+            messages.error(request, 'Kindle Profile URL 未填写，将无法抓取Kindle Highlights')
+
         share_to_weibo = True if request.POST.get('share_to_weibo') else False
         share_to_douban = True if request.POST.get('share_to_douban') else False
         msg = '自动发布 %s 已%s'
