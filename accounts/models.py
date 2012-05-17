@@ -53,7 +53,7 @@ class UserProfile(models.Model):
 
     def is_weibo_expires(self):
         return not self.weibo_tokens or \
-                time.time() > float(self.weibo_access_token()['expires_in'])
+                time.time() > self.get_weibo_tokens_dict()['expires_in']
 
     def get_kindle_name(self):
         if self.kindle_profile_url != '':
