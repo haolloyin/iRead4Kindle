@@ -17,6 +17,14 @@ i {margin:4px;}
     <div class="span6 offset3">
         <h1 class="logo">iRead.Kindle</h1>
 
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message|safe }}
+            <a class="close" data-dismiss="alert">×</a>
+        </div>
+        {% endfor %}
+        {% endif %}
+
         <h3><i class="icon-book"></i>Share Your Highlights to Weibo</h3>
         <div class="desc">
             <p>iRead.Kindle is inspired by <a href="http://kindle.io/">kindle.io</a>, it can record all your Kindle highlights, which you share with friends using your social network accounts (like Twitter or Facebook). <br>
