@@ -18,6 +18,7 @@ from django.template import RequestContext
 
 from iRead4Kindle.accounts.models import UserProfile
 from iRead4Kindle.accounts import utils as social_api
+from iRead4Kindle.accounts.weibo import APIError as WeiboAPIError
 from iRead4Kindle.highlights.models import Highlight
 from iRead4Kindle.utils.decorators import admin_required
 
@@ -67,13 +68,16 @@ def highlights(request, username, start, end):
 def update_weibo(up=None, text=''):
     if up is None or text == '':
         return None
-    weibo_api = social_api.get_weibo_api(up.weibo_id, \
-            token_dict=up.get_weibo_tokens_dict())
-    result = weibo_api.post.statuses__update(status=text)
-    # get weibo mid for visiting the status update abobe
-    mid = weibo_api.get.statuses__querymid(id=result['id'], type=1)
-    status_url = 'http://weibo.com/%s/%s' % (result['user']['id'], mid['mid'])
-    return status_url
+    try:
+        weibo_api = social_api.get_weibo_api(up.weibo_id, \
+                token_dict=up.get_weibo_tokens_dict())
+        result = weibo_api.post.statuses__update(status=text)
+        # get weibo mid for visiting the status update abobe
+        mid = weibo_api.get.statuses__querymid(id=result['id'], type=1)
+        status_url = 'http://weibo.com/%s/%s' % (result['user']['id'], mid['mid'])
+        return status_url
+    except WeiboAPIError, e:
+        print e
 
 
 def single_user_check_and_share(request):
@@ -107,7 +111,7 @@ def single_user_check_and_share(request):
     if up.has_weibo_oauth() and up.share_to_weibo:
         url = ''
         hl_text = new_hls[0].text.strip()
-        hl_text = hl_text[:65] if len(hl_text) > 65 else hl_text
+        hl_text = hl_text[:100]+'...' if len(hl_text) > 100 else hl_text
         if url_len > 1:
             reader = up.get_kindle_uid()
             start = hl_urls[0].split('/')[2]
@@ -116,7 +120,7 @@ def single_user_check_and_share(request):
         else:
             url = 'http://%s/highlights/detail%s' % (request.META['HTTP_HOST'], hl_urls[0].split('/')[2])
 
-        weibo_text = u'#iRead4Kindle#「%s...」%s' % (hl_text, url)
+        weibo_text = u'『%s』%s #iRead4Kindle#' % (hl_text, url)
         status_url = update_weibo(up=up, text=weibo_text)
 
     status_url = '<a href="%s">%s</a>' % (status_url, status_url)
@@ -146,7 +150,7 @@ def check_highlight_updates(request):
 
         if up.has_weibo_oauth():
             hl_text = new_hls[0].text.strip()
-            hl_text = hl_text[:65] if len(hl_text) > 65 else hl_text
+            hl_text = hl_text[:100]+'...' if len(hl_text) > 100 else hl_text
             if url_len > 1:
                 reader = up.get_kindle_uid()
                 start = hl_urls[0].split('/')[2]
@@ -155,7 +159,7 @@ def check_highlight_updates(request):
             else:
                 url = 'http://%s/highlights/detail%s' % (request.META['HTTP_HOST'], hl_urls[0].split('/')[2])
 
-            weibo_text = u'#iRead4Kindle#「%s...」%s' % (hl_text, url)
+            weibo_text = u'『%s』%s #iRead4Kindle#' % (hl_text, url)
             update_weibo(up=up, text=weibo_text)
 
         #TODO: share to douban
