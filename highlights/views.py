@@ -22,7 +22,7 @@ from iRead4Kindle.highlights.models import Highlight
 from iRead4Kindle.utils.decorators import admin_required
 
 def index(request):
-    if not isinstance(request.user, AnonymousUser):
+    if isinstance(request.user, AnonymousUser):
         messages.error(request, '匿名用户没有Kindle Highlights')
         return HttpResponseRedirect('/')
 
