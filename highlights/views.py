@@ -169,11 +169,17 @@ def check_highlight_updates(request):
     return HttpResponseRedirect(reverse('accounts_profile'))
 
 
-def fetch_new_highlights(request, profile_url='', timeout=20):
-    profile_url = 'https://kindle.amazon.com/profile/%s' % profile_url
-    page = urlopen(profile_url)
+def fetch_new_highlights(request, profile_url='', offset=0, new_urls=[], new_hls=[], timeout=20):
+    assert new_urls != None
+    assert new_hls != None
+
+    p_url = 'https://kindle.amazon.com/profile/%s' % profile_url
+    if offset != 0:
+        p_url += '?offset=%s' % str(offset)
+
+    page = urlopen(p_url)
     if page.getcode() != 200:
-        messages.error(request, 'profile page fetch error: %s' % page.getcode())
+        messages.error(request, 'urlopen() error: %s' % page.getcode())
         return HttpResponseRedirect(reverse('accounts_profile'))
 
     if USE_BS4:
@@ -188,19 +194,34 @@ def fetch_new_highlights(request, profile_url='', timeout=20):
         shared_posts = soup.find_all(_get_shared_tags)
     else:
         shared_posts = soup.findAll(_get_shared_tags)
-    new_posts = []
-    new_urls = []
+
+    if len(shared_posts) < 1:
+        #assert False
+        return (new_urls[::-1], new_hls[::-1])
+
+    posts = []
+    urls = []
+    no_fetched = len(shared_posts)
     for hl in shared_posts:
         hl_url = hl['href']
         if Highlight.objects.filter(url=hl_url).exists():
-            break
-        new_posts.append(hl)
-        new_urls.append(hl_url)
+            no_fetched -= 1
+            continue
+        posts.append(hl)
+        urls.append(hl_url)
     if USE_BS4:
-        new_highlights = [share.find_next('div', {'class': 'sampleHighlight'}) \
-                for share in new_posts]
+        new_hls.extend([share.find_next('div', {'class': 'sampleHighlight'}) \
+                for share in posts])
     else:
-        new_highlights = [share.findNext('div', {'class': 'sampleHighlight'}) \
-                for share in new_posts]
-    return (new_urls[::-1], new_highlights[::-1])
+        new_hls.extend([share.findNext('div', {'class': 'sampleHighlight'}) \
+                for share in posts])
+    new_urls.extend(urls)
+
+    # fetch more new highlights if no_fetched > 2 on one page
+    if no_fetched > 2:
+        offset += len(shared_posts)
+        fetch_new_highlights(request, profile_url=profile_url, offset=offset, \
+                new_urls=new_urls, new_hls=new_hls)
+
+    return (new_urls[::-1], new_hls[::-1])
 
