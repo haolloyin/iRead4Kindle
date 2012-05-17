@@ -9,7 +9,7 @@ except:
     # BeautifulSoup-3.2.1
     from iRead4Kindle.utils.BeautifulSoup import BeautifulSoup as BS
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -22,6 +22,10 @@ from iRead4Kindle.highlights.models import Highlight
 from iRead4Kindle.utils.decorators import admin_required
 
 def index(request):
+    if not isinstance(request.user, AnonymousUser):
+        messages.error(request, '匿名用户没有Kindle Highlights')
+        return HttpResponseRedirect('/')
+
     highlights = Highlight.objects.filter(user=request.user)
     if not highlights:
         # return HttpResponseRedirect(reverse('highlights_index'))
@@ -195,3 +199,4 @@ def fetch_new_highlights(request, profile_url='', timeout=20):
         new_highlights = [share.findNext('div', {'class': 'sampleHighlight'}) \
                 for share in new_posts]
     return (new_urls[::-1], new_highlights[::-1])
+
