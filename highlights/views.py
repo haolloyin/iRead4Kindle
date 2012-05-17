@@ -23,7 +23,7 @@ from iRead4Kindle.utils.decorators import admin_required
 
 def index(request):
     if isinstance(request.user, AnonymousUser):
-        messages.error(request, '匿名用户没有Kindle Highlights')
+        messages.error(request, '当前您为匿名用户，没有 Kindle Highlights，请授权登录或注册后填写 Kindle Profile URL')
         return HttpResponseRedirect('/')
 
     highlights = Highlight.objects.filter(user=request.user)
