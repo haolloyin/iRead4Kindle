@@ -17,6 +17,55 @@ from iRead4Kindle.accounts.models import UserProfile
 from iRead4Kindle.highlights.models import Highlight
 from iRead4Kindle.accounts import utils as social_api
 
+def fetch_all_hl(profile_url='', offset=0, new_urls=[], new_hls=[]):
+    '''
+from iRead4Kindle.highlights.tests import fetch_all_hl
+urls, hls = [], []
+fetch_all_hl(profile_url='hao/2585443', offset=0, new_urls=urls, new_hls=hls)
+    '''
+    assert new_hls != None
+    assert new_urls != None
+    p_url = 'https://kindle.amazon.com/profile/%s' % profile_url
+    if offset != 0:
+        p_url += '?offset=%s' % str(offset)
+    page = urlopen(p_url)
+    if page.getcode() != 200:
+        print 'http error: ', page.getcode()
+        return
+
+    soup = BS(page, from_encoding='utf8')
+    
+    def _get_shared_tags(tag):
+        return tag.has_key('href') and tag['href'].startswith('/post/')
+
+    shared_posts = soup.find_all(_get_shared_tags)
+    assert shared_posts != None
+    posts = []
+    urls = []
+    count = 0
+    for hl in shared_posts:
+        count += 1
+        hl_url = hl['href']
+        posts.append(hl)
+        urls.append(hl_url)
+
+    new_hls.extend([share.find_next('div', {'class': 'sampleHighlight'}) \
+            for share in posts])
+    new_urls.extend(urls)
+
+    print new_hls
+    print new_urls
+
+    print 'urls %s' % len(new_urls)
+    print 'hls %s' % len(new_hls)
+
+    if count == len(shared_posts):
+        print 'fetched ', len(shared_posts)
+        fetch_all_hl(profile_url, offset=offset+10, new_urls=new_urls, new_hls=new_hls)
+
+    return (new_urls[::-1], new_hls[::-1])
+
+
 
 def get_weibo_api(username='admin'):
     user = User.objects.get(username=username)
