@@ -17,7 +17,7 @@ class Highlight(models.Model):
     fetch_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ["-added"]
+        ordering = ['-id', '-added']
 
     def __unicode__(self):
         return '%s: %s ...' % (self.user.username, self.text[:20])
