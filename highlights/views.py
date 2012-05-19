@@ -120,7 +120,7 @@ def single_user_check_and_share(request):
         else:
             url = 'http://%s/highlights/detail%s' % (request.META['HTTP_HOST'], hl_urls[0].split('/')[2])
 
-        weibo_text = u'『%s』%s #iRead4Kindle#' % (hl_text, url)
+        weibo_text = u'『%s』%s 共%s条#iRead4Kindle#' % (hl_text, url, url_len)
         status_url = update_weibo(up=up, text=weibo_text)
 
     status_url = '<a href="%s">%s</a>' % (status_url, status_url)
@@ -159,7 +159,7 @@ def check_highlight_updates(request):
             else:
                 url = 'http://%s/highlights/detail%s' % (request.META['HTTP_HOST'], hl_urls[0].split('/')[2])
 
-            weibo_text = u'『%s』%s #iRead4Kindle#' % (hl_text, url)
+            weibo_text = u'『%s』%s 共%s条#iRead4Kindle#' % (hl_text, url, url_len)
             update_weibo(up=up, text=weibo_text)
 
         #TODO: share to douban
