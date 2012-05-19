@@ -56,7 +56,7 @@ def highlights(request, username, start, end):
     hls = Highlight.objects.filter(user=up.user)
     start_id = hls.get(url__contains=start).pk
     end_id = hls.get(url__contains=end).pk
-    hls = hls.filter(pk__gte=start_id).filter(pk__lte=end_id)
+    hls = hls.filter(pk__gte=start_id).filter(pk__lte=end_id)[::-1]
     if not hls or len(hls) == 0:
         return HttpResponseRedirect(reverse('highlights_index'))
     kindle_name = up.get_kindle_name()
