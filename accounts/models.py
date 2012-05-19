@@ -46,7 +46,10 @@ class UserProfile(models.Model):
         return {'access_token': tokens[0], 'token_secret': tokens[1]}
 
     def has_weibo_oauth(self):
-        return (True if self.get_weibo_tokens_dict() else False)
+        w_tokens = self.get_weibo_tokens_dict()
+        if w_tokens and not self.is_weibo_expires():
+            return True
+        return False
 
     def has_douban_oauth(self):
         return (True if self.get_douban_tokens_dict() else False)
